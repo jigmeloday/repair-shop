@@ -1,7 +1,9 @@
+export const metadata = {
+  title: 'Customer',
+};
+
 function Customers() {
-  return(
-    <>Home</>
-  )
+  return <>Home</>;
 }
 
-export default Customers
+export default Customers;

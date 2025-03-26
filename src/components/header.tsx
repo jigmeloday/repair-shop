@@ -1,7 +1,10 @@
-import { HomeIcon, TicketIcon, UsersRound } from 'lucide-react';
+'use client';
+import { HomeIcon, LogOut, TicketIcon, UsersRound } from 'lucide-react';
 import NavButton from './nav-button';
 import Link from 'next/link';
 import { ModeToggle } from './mode-toggle';
+import { Button } from './ui/button';
+import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs';
 
 function Header() {
   return (
@@ -22,7 +25,21 @@ function Header() {
         <div className="flex items-center">
           <NavButton href="/tickets" label="Tickets" icon={TicketIcon} />
           <NavButton href="/customers" label="Customers" icon={UsersRound} />
+
           <ModeToggle />
+
+          <Button
+            variant="ghost"
+            aria-label="logout"
+            size="icon"
+            title="Logout"
+            className="rounded-full"
+            asChild
+          >
+            <LogoutLink>
+              <LogOut />
+            </LogoutLink>
+          </Button>
         </div>
       </div>
     </header>

@@ -6,22 +6,22 @@ import { Button } from '@/components/ui/button';
 import {
   InsertTicketSchema,
   type insertTicketSchemaType,
-  SelectTicketSchema,
   type selectTicketSchemaType,
 } from '@/zod-schema/ticket';
-
+import { type selectCustomerSchemaType } from '@/zod-schema/customer';
 type Props = {
   ticket?: selectTicketSchemaType;
+  customer?: selectCustomerSchemaType;
 };
 
-export default function TicketForm({ ticket }: Props) {
+export default function TicketForm({ ticket, customer }: Props) {
   const defaultValues: insertTicketSchemaType = {
-    id: ticket?.id ?? "(NEW)",
-    customerId: ticket?.customerId || customer.id,
-    title: ticket?.title || '',
-    description: ticket?.description || '',
-    tech: ticket?.tech || '',
-    notes: ticket?.notes || ''
+    id: ticket?.id ?? '(NEW)',
+    customerId: ticket?.customerId ?? (customer?.id as number),
+    title: ticket?.title ?? '',
+    description: ticket?.description ?? '',
+    completed: ticket?.completed ?? false,
+    tech: ticket?.tech ?? 'new-ticket@example.com',
   };
 
   const form = useForm<insertTicketSchemaType>({
@@ -37,7 +37,8 @@ export default function TicketForm({ ticket }: Props) {
     <div className="flex flex-col gap-1 sm:px-8">
       <div>
         <h2 className="text-2xl font-bold">
-          {customer?.id ? 'Edit' : 'Add New Customer'} Customer Form
+          {ticket?.id ? 'Edit' : 'New'} Ticket{' '}
+          {ticket?.id ? `# ${ticket.id}` : 'Form'}
         </h2>
       </div>
       <Form {...form}>

@@ -1,5 +1,6 @@
 import BackButton from '@/components/ui/back-button';
 import { getCustomer } from '@/lib/query/get-customer';
+import CustomerForm from './customer-form';
 
 async function Page({
   searchParams,
@@ -18,9 +19,9 @@ async function Page({
           </>
         );
       }
-      console.log(customer);
+      return <CustomerForm customer={customer} />;
     } else {
-      return <div>Customer not found</div>;
+      return <CustomerForm />;
     }
   } catch (error) {
     if (error instanceof Error) {

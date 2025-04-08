@@ -4,17 +4,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { InputWithLabel } from '@/components/inputs/input-with-label';
-
-import {
-  InsertCustomerSchema,
-  type insertCustomerSchemaType,
-  SelectCustomerSchema,
-  type selectCustomerSchemaType,
-} from '@/zod-schema/customer';
 import { TextAreaWithLabel } from '@/components/inputs/text-area-with-label';
 import { SelectWithLabel } from '@/components/inputs/select-with-label';
 import { StatesArray } from '@/constants/state-array';
-
+import {
+  InsertCustomerSchema,
+  type insertCustomerSchemaType,
+  type selectCustomerSchemaType,
+} from '@/zod-schema/customer';
 type Props = {
   customer?: selectCustomerSchemaType;
 };

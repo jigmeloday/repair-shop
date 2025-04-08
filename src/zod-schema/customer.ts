@@ -9,7 +9,7 @@ export const InsertCustomerSchema = createInsertSchema(customers, {
   city: (schema) => schema.min(1, 'City is required'),
   state: (schema) => schema.length(2, 'State must be 2 characters'),
   zip: (schema) => schema.regex(/^\d{5}(-\d{4})?$/, 'Invalid zip code'),
-  phone: (schema) => schema.regex(/^\d{3}-\d{3}-\d{2}$/, 'Invalid phone code'),
+  phone: (schema) => schema.regex(/^\d{3}-\d{3}-\d{4}$/, 'Invalid phone code'),
  });
 
  export const SelectCustomerSchema = createSelectSchema(customers);

@@ -6112,6 +6112,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"next-safe-action@npm:^7.10.5":
+  version: 7.10.5
+  resolution: "next-safe-action@npm:7.10.5"
+  peerDependencies:
+    "@sinclair/typebox": ">= 0.33.3"
+    next: ">= 14.0.0"
+    react: ">= 18.2.0"
+    react-dom: ">= 18.2.0"
+    valibot: ">= 0.36.0"
+    yup: ">= 1.0.0"
+    zod: ">= 3.0.0"
+  peerDependenciesMeta:
+    "@sinclair/typebox":
+      optional: true
+    valibot:
+      optional: true
+    yup:
+      optional: true
+    zod:
+      optional: true
+  checksum: 10c0/91c57cae6df09d5c1dd01aa0d5a0d5539d38f99f9db43ef774c4f8db4525eb6f5cb6d8b1ff309c56091828c3e2e9384ef0caddb3da70c5a96478ffbc46e1c966
+  languageName: node
+  linkType: hard
+
 "next-themes@npm:^0.4.6":
   version: 0.4.6
   resolution: "next-themes@npm:0.4.6"
@@ -6787,10 +6811,12 @@ __metadata:
     eslint-config-next: "npm:15.2.3"
     lucide-react: "npm:^0.483.0"
     next: "npm:15.2.3"
+    next-safe-action: "npm:^7.10.5"
     next-themes: "npm:^0.4.6"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
     react-hook-form: "npm:^7.55.0"
+    sonner: "npm:^2.0.3"
     tailwind-merge: "npm:^3.0.2"
     tailwindcss: "npm:^4"
     tsx: "npm:^4.19.3"
@@ -7226,6 +7252,16 @@ __metadata:
     ip-address: "npm:^9.0.5"
     smart-buffer: "npm:^4.2.0"
   checksum: 10c0/00c3271e233ccf1fb83a3dd2060b94cc37817e0f797a93c560b9a7a86c4a0ec2961fb31263bdd24a3c28945e24868b5f063cd98744171d9e942c513454b50ae5
+  languageName: node
+  linkType: hard
+
+"sonner@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "sonner@npm:2.0.3"
+  peerDependencies:
+    react: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+    react-dom: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+  checksum: 10c0/59f84142f7a692dd1ec90e6df2003a70ff0b325eaef1d5dd17ad250e7f992b71053824f1a7ab3912f8c4caa5ce30523a096b5f5108b3e8ae13f906048691aca1
   languageName: node
   linkType: hard
 

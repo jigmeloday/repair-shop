@@ -14,7 +14,12 @@ import {
   type selectCustomerSchemaType,
 } from '@/zod-schema/customer';
 import { CheckboxWithLabel } from '@/components/inputs/checkbox-with-label';
-import { is } from 'drizzle-orm';
+import { useAction } from 'next-safe-action/hooks';
+import { saveCustomerAction } from '@/app/actions/safe-customer-action';
+import { LoaderCircle } from 'lucide-react';
+import { toast } from 'sonner';
+import DisplayServerActionResult from '@/components/display-server-action-result';
+
 type Props = {
   customer?: selectCustomerSchemaType;
 };
@@ -22,9 +27,8 @@ type Props = {
 export default function CustomerForm({ customer }: Props) {
   const { getPermission, isLoading } = useKindeBrowserClient();
   const isManager = !isLoading && getPermission('manager')?.isGranted;
-
   const defaultValues: insertCustomerSchemaType = {
-    id: customer?.id,
+    id: customer?.id ?? 0,
     firstName: customer?.firstName ?? '',
     lastName: customer?.lastName ?? '',
     email: customer?.email ?? '',
@@ -45,12 +49,30 @@ export default function CustomerForm({ customer }: Props) {
     resolver: zodResolver(InsertCustomerSchema),
     defaultValues,
   });
+
+  const {
+    execute: executeSave,
+    result: saveResult,
+    isExecuting: isSaving,
+    reset: resetSaveAction,
+  } = useAction(saveCustomerAction, {
+    onSuccess({ data }) {
+      toast.success('Customer saved successfully 🎉');
+    },
+    onError({ error }) {
+      debugger;
+      toast.error('Save customer failed ❌');
+    },
+  });
+
   const onSubmit = async (data: insertCustomerSchemaType) => {
-    console.log(data);
+    debugger;
+    executeSave(data);
   };
 
   return (
     <div className="flex flex-col gap-1 sm:px-8">
+      <DisplayServerActionResult result={saveResult} />
       <div>
         <h2 className="text-2xl font-bold">
           {customer?.id ? 'Edit' : 'Add New Customer'} Customer{' '}
@@ -122,8 +144,9 @@ export default function CustomerForm({ customer }: Props) {
                 className="w-3/4"
                 variant="default"
                 title="Save"
+                disabled={!form.formState.isDirty || isSaving}
               >
-                Save
+                {isSaving ? <LoaderCircle className="animate-spin" /> : 'Save'}
               </Button>
               <Button
                 type="button"
@@ -131,6 +154,7 @@ export default function CustomerForm({ customer }: Props) {
                 title="Reset"
                 onClick={() => {
                   form.reset(defaultValues);
+                  resetSaveAction();
                 }}
               >
                 Reset

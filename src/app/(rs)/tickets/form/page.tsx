@@ -3,7 +3,7 @@ import { getCustomer } from '@/lib/query/get-customer';
 import { getTicket } from '@/lib/query/get-tiecket';
 import TicketForm from './ticket-form';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { Users, init as kindeInit } from "@kinde/management-api-js"
+import { Users, init as kindeInit } from '@kinde/management-api-js';
 
 export async function generateMetadata({
   searchParams,
@@ -87,9 +87,10 @@ export default async function TicketFormPage({
         kindeInit();
         const { users } = await Users.getUsers();
         const techs = users
-          ? users.map((user: any) => ({ id: user.email, description: user.email }))
+          ? users.map((user) => ({ id: user.email!, description: user.email! }))
           : [];
-        return <TicketForm customer={customer} tech={techs} />;
+        console.log('techs', techs);
+        return <TicketForm customer={customer} techs={techs} />;
       } else {
         return <TicketForm customer={customer} />;
       }
@@ -114,12 +115,21 @@ export default async function TicketFormPage({
         kindeInit();
         const { users } = await Users.getUsers();
         const techs = users
-          ? users.map((user: any) => ({ id: user.email, description: user.email }))
+          ? users.map((user: any) => ({
+              id: user.email,
+              description: user.email,
+            }))
           : [];
-        return <TicketForm customer={customer} ticket={ticket} tech={techs} />;
+        return <TicketForm customer={customer} ticket={ticket} techs={techs} />;
       } else {
         const isEditable = user.email === ticket.tech;
-        return <TicketForm customer={customer} ticket={ticket} isEditable={isEditable}/>;
+        return (
+          <TicketForm
+            customer={customer}
+            ticket={ticket}
+            isEditable={isEditable}
+          />
+        );
       }
     }
   } catch (e) {

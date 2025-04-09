@@ -1,39 +1,46 @@
 'use client';
+
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from '@/components/ui/form';
-import { InputWithLabel } from '@/components/inputs/input-with-label';
-import { TextAreaWithLabel } from '@/components/inputs/text-area-with-label';
 import { Button } from '@/components/ui/button';
+import { selectCustomerSchemaType } from '@/zod-schema/customer';
 import {
   InsertTicketSchema,
-  type insertTicketSchemaType,
-  type selectTicketSchemaType,
+  insertTicketSchemaType,
+  selectTicketSchemaType,
 } from '@/zod-schema/ticket';
-import { type selectCustomerSchemaType } from '@/zod-schema/customer';
-import { CheckboxWithLabel } from '@/components/inputs/checkbox-with-label';
+import { useAction } from 'next-safe-action/hooks';
+import { saveTicketAction } from '@/app/actions/save-ticket-action';
+import { toast } from 'sonner';
+import DisplayServerActionResult from '@/components/display-server-action-result';
+import { InputWithLabel } from '@/components/inputs/input-with-label';
 import { SelectWithLabel } from '@/components/inputs/select-with-label';
+import { CheckboxWithLabel } from '@/components/inputs/checkbox-with-label';
+import { TextAreaWithLabel } from '@/components/inputs/text-area-with-label';
+import { LoaderCircle } from 'lucide-react';
 
 type Props = {
+  customer: selectCustomerSchemaType;
   ticket?: selectTicketSchemaType;
-  customer?: selectCustomerSchemaType;
-  isEditable?: boolean;
-  tech?: {
+  techs?: {
     id: string;
     description: string;
   }[];
+  isEditable?: boolean;
 };
 
 export default function TicketForm({
-  ticket,
   customer,
+  ticket,
+  techs,
   isEditable = true,
-  tech,
 }: Props) {
-  const isManeger = Array.isArray(tech);
+  const isManager = Array.isArray(techs);
+
   const defaultValues: insertTicketSchemaType = {
     id: ticket?.id ?? '(NEW)',
-    customerId: ticket?.customerId ?? (customer?.id as number),
+    customerId: ticket?.customerId ?? customer.id,
     title: ticket?.title ?? '',
     description: ticket?.description ?? '',
     completed: ticket?.completed ?? false,
@@ -45,28 +52,42 @@ export default function TicketForm({
     resolver: zodResolver(InsertTicketSchema),
     defaultValues,
   });
-  const onSubmit = async (data: insertTicketSchemaType) => {
-    console.log(data);
-  };
+
+  const {
+    execute: executeSave,
+    result: saveResult,
+    isPending: isSaving,
+    reset: resetSaveAction,
+  } = useAction(saveTicketAction, {
+    onSuccess({ data }) {
+      if (data?.message) {
+        toast('Success! 🎉');
+      }
+    },
+    onError({ error }) {
+      toast('Save Failed');
+    },
+  });
+
+  async function submitForm(data: insertTicketSchemaType) {
+    executeSave(data);
+  }
 
   return (
     <div className="flex flex-col gap-1 sm:px-8">
+      <DisplayServerActionResult result={saveResult} />
       <div>
         <h2 className="text-2xl font-bold">
-          {/* {ticket?.id && isEditable ? 'Edit' : 'New'} Ticket{' '}
-          {ticket?.id ? `# ${ticket.id}` : 'Form'} */}
-          {
-            isEditable ? (
-              ticket?.id && isEditable ? 'Edit Ticket' : 'New Ticket Form'
-            ) : (
-              ticket?.id ? 'View Ticket' : 'New Ticket Form'
-            )
-          }
+          {ticket?.id && isEditable
+            ? `Edit Ticket # ${ticket.id}`
+            : ticket?.id
+            ? `View Ticket # ${ticket.id}`
+            : 'New Ticket Form'}
         </h2>
       </div>
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(submitForm)}
           className="flex flex-col md:flex-row gap-4 md:gap-8"
         >
           <div className="flex flex-col gap-4 w-full max-w-xs">
@@ -75,26 +96,27 @@ export default function TicketForm({
               nameInSchema="title"
               disabled={!isEditable}
             />
-            {isManeger ? (
+
+            {isManager ? (
               <SelectWithLabel<insertTicketSchemaType>
-                fieldTitle="Tech"
+                fieldTitle="Tech ID"
                 nameInSchema="tech"
                 data={[
                   {
                     id: 'new-ticket@example.com',
                     description: 'new-ticket@example.com',
                   },
-                  ...tech,
+                  ...techs,
                 ]}
               />
             ) : (
               <InputWithLabel<insertTicketSchemaType>
                 fieldTitle="Tech"
                 nameInSchema="tech"
-                disabled
-                readOnly={true}
+                disabled={true}
               />
             )}
+
             {ticket?.id ? (
               <CheckboxWithLabel<insertTicketSchemaType>
                 fieldTitle="Completed"
@@ -108,18 +130,19 @@ export default function TicketForm({
               <h3 className="text-lg">Customer Info</h3>
               <hr className="w-4/5" />
               <p>
-                {customer?.firstName} {customer?.lastName}
+                {customer.firstName} {customer.lastName}
               </p>
-              <p>{customer?.address1}</p>
-              {customer?.address2 ? <p>{customer?.address2}</p> : null}
+              <p>{customer.address1}</p>
+              {customer.address2 ? <p>{customer.address2}</p> : null}
               <p>
-                {customer?.city}, {customer?.state} {customer?.zip}
+                {customer.city}, {customer.state} {customer.zip}
               </p>
               <hr className="w-4/5" />
-              <p>{customer?.email}</p>
-              <p>Phone: {customer?.phone}</p>
+              <p>{customer.email}</p>
+              <p>Phone: {customer.phone}</p>
             </div>
           </div>
+
           <div className="flex flex-col gap-4 w-full max-w-xs">
             <TextAreaWithLabel<insertTicketSchemaType>
               fieldTitle="Description"
@@ -127,6 +150,7 @@ export default function TicketForm({
               className="h-96"
               disabled={!isEditable}
             />
+
             {isEditable ? (
               <div className="flex gap-2">
                 <Button
@@ -134,15 +158,24 @@ export default function TicketForm({
                   className="w-3/4"
                   variant="default"
                   title="Save"
+                  disabled={isSaving}
                 >
-                  Save
+                  {isSaving ? (
+                    <>
+                      <LoaderCircle className="animate-spin" /> Saving
+                    </>
+                  ) : (
+                    'Save'
+                  )}
                 </Button>
+
                 <Button
                   type="button"
                   variant="destructive"
                   title="Reset"
                   onClick={() => {
                     form.reset(defaultValues);
+                    resetSaveAction();
                   }}
                 >
                   Reset

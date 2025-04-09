@@ -20,7 +20,7 @@ export function InputWithLabel<S>({fieldTitle, nameInSchema, className, ...props
         <FormItem className={className}>
           <FormLabel className='text-base' htmlFor={nameInSchema}>{fieldTitle}</FormLabel>
           <FormControl>
-            <Input id={nameInSchema} className={`w-full max-w-xs disabled:text-blue-500 dark:disabled:text-green-500 disabled:opacity-75 ${className}`} {...field} {...props} />
+            <Input id={nameInSchema} className={`w-full max-w-xs disabled:text-blue-500 dark:disabled:text-yellow-500 disabled:opacity-75 ${className}`} {...field} {...props} />
           </FormControl>
           <FormMessage />
         </FormItem>

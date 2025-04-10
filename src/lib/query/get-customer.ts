@@ -20,7 +20,7 @@ type Customer = {
   updatedAt: Date;
 }
 
-export async function getCustomer(id: number): Promise< Customer | null> {
+export async function getCustomer(id: number): Promise< Customer> {
   const customer =  await db.select().from(customers).where(eq(customers.id, id));
   return customer[0]
 }

@@ -1,7 +1,6 @@
 import { withAuth } from '@kinde-oss/kinde-auth-nextjs/server';
-import { NextResponse } from 'next/server';
 
-export default withAuth(async function middleware(request: NextResponse) {}, {
+export default withAuth(async function middleware() {}, {
   isReturnToCurrentPage: true,
 });
 

@@ -64,7 +64,7 @@ export default function TicketForm({
         toast('Success! 🎉');
       }
     },
-    onError({ error }) {
+    onError() {
       toast('Save Failed');
     },
   });

@@ -56,11 +56,10 @@ export default function CustomerForm({ customer }: Props) {
     isExecuting: isSaving,
     reset: resetSaveAction,
   } = useAction(saveCustomerAction, {
-    onSuccess({ data }) {
+    onSuccess() {
       toast.success('Customer saved successfully 🎉');
     },
-    onError({ error }) {
-      debugger;
+    onError() {
       toast.error('Save customer failed ❌');
     },
   });

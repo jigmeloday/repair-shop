@@ -17,7 +17,18 @@ async function Customers({
   return (
     <>
       <CustomerSearch action="/customers" />
-      <CustomerTable data={result} />
+      {
+        result && result.length > 0 ? (
+          <CustomerTable
+            data={result}
+            />
+        ) : (
+          <div className="flex flex-col items-center justify-center h-screen">
+            <h1 className="text-2xl font-bold">No Customers Found</h1>
+            <p className="text-gray-500">Please try a different search.</p>
+          </div>
+        )
+      }
     </>
   );
 }

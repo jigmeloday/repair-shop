@@ -1,5 +1,6 @@
 import CustomerSearch from '@/components/search-form';
 import { getCustomerSearch } from '@/lib/query/get-customer-serch';
+import CustomerTable from './customer-table';
 
 export const metadata = {
   title: 'Customer Search',
@@ -16,7 +17,7 @@ async function Customers({
   return (
     <>
       <CustomerSearch action="/customers" />
-      <p>{JSON.stringify(result)}</p>
+      <CustomerTable data={result} />
     </>
   );
 }

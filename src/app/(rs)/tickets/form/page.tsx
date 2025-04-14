@@ -1,6 +1,6 @@
 import BackButton from '@/components/ui/back-button';
 import { getCustomer } from '@/lib/query/get-customer';
-import { getTicket } from '@/lib/query/get-tiecket';
+import { getTicket } from '@/lib/query/get-ticket';
 import TicketForm from './ticket-form';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { Users, init as kindeInit } from '@kinde/management-api-js';

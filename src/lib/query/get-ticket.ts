@@ -1,34 +1,19 @@
 import { db } from '@/db';
-import { customers, tickets } from '@/db/schema';
-import { ilike, or, eq } from 'drizzle-orm';
+import { tickets } from '@/db/schema';
+import {eq} from 'drizzle-orm';
 
-export async function getTicketsSearch(searchText: string) {
-  const result = await db
-    .select({
-      ticketDate: tickets.createdAt,
-      title: tickets.title,
-      firstName: customers.firstName,
-      lastName: customers.lastName,
-      email: customers.email,
-      tech: tickets.tech,
-    })
-    .from(tickets)
-    .leftJoin(customers, eq(tickets.customerId, customers.id))
-    .where(
-      or(
-        ilike(tickets.title, `%${searchText}%`),
-        ilike(tickets.description, `%${searchText}%`),
-        ilike(tickets.tech, `%${searchText}%`),
-        ilike(customers.firstName, `%${searchText}%`),
-        ilike(customers.lastName, `%${searchText}%`),
-        ilike(customers.email, `%${searchText}%`),
-        ilike(customers.phone, `%${searchText}%`),
-        ilike(customers.address1, `%${searchText}%`),
-        ilike(customers.address2, `%${searchText}%`),
-        ilike(customers.city, `%${searchText}%`),
-        ilike(customers.state, `%${searchText}%`),
-        ilike(customers.zip, `%${searchText}%`)
-      )
-    );
-  return result;
+type Ticket = {
+  id: number;
+  customerId: number;
+  title: string;
+  description: string | null;
+  completed: boolean;
+  tech: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export async function getTicket(id: number): Promise<Ticket> {
+  const ticket = await db.select().from(tickets).where(eq(tickets.id, id));
+  return ticket[0];
 }
